@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css/main.css"/>
+    <script src="js/jquery-3.5.1.min.js"></script>
+    <!-- SDK/Library for Amazon Cognito -->
+    <script type="text/javascript" src="./lib/cognito/jsbn.js"></script>
+    <script type="text/javascript" src="./lib/cognito/jsbn2.js"></script>
+    <script type="text/javascript" src="./lib/cognito/sjcl.js"></script>
+    <script type="text/javascript" src="./lib/cognito/moment.js"></script>
+    <script type="text/javascript" src="./lib/awssdk/aws-cognito-sdk.js"></script>
+    <script type="text/javascript" src="./lib/awssdk/amazon-cognito-identity.min.js"></script>
+    <script type="text/javascript" src="./lib/awssdk/aws-sdk.2.5.5.js"></script>
+    <script type="text/javascript" src="./lib/utils.js"></script>
+    <script type="text/javascript" src="./js/config.js"></script>
+    <script type="text/javascript" src="./js/cognito.js"></script>
+    <title>家計簿</title>
+</head>
+<body>
+    <script src="js/index.js"></script>
+    <div id="container">
+        <div id="header">
+            <p id="header-title">expense tracker web app</p>
+            <p id="header-id">ID : <span id = "id-val"></span></p>
+        </div>
+        <div id="body">
+            <div class="sidearea">
+                <div class="side_top">
+                    <div><button class="register btn"  onclick="location.href='./input.html'">登録</button></div>
+                
+                    <div id = "pricearea">
+                        <div class = "totalprice pricearea-m">
+                            <p class = "price-title">今月の出費</p>
+                            <p><span id = "m-val">0</span>円</p>
+                        </div>
+                        <div class = "totalprice pricearea-t">
+                            <p class = "price-title">これまでの出費</p>
+                            <p><span id = "t-val">0</span>円</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="side_bottom">
+                    <form id="cognito-signout">
+                        <script>
+                            updateTextArea($('#cognito-signout-code'), 'const signOut' + signOut.toString());
+                        </script>
+                        <button type="submit" id="cognito-signout" class="btn-logout btn-unfilled btn">ログアウト</button>
+                    </form> 
+                </div>
+            </div>
+            
+            
+            <div class="form">
+                <div class="search_form">
+                    <div id = "searcharea">
+                        <div class="searchbox">
+                            <select id = "search-category" class = "searchCheck">
+                                <option value="">カテゴリー</option>
+                                <option value="食費">食費</option>
+                                <option value="生活費">生活費</option>
+                                <option value="日用品">日用品</option>
+                                <option value="衣服">衣服</option>
+                                <option value="趣味">趣味</option>
+                                <option value="その他">その他</option>
+                            </select>
+                            <input class="inputCSS search-date searchCheck" type="date" id="startDate">
+                            <p class = "search-text">〜</p>
+                            <input class="inputCSS search-date searchCheck" type="date" id="endDate">
+                            <input type="text" class = "inputCSS searchCheck" id = "free-search" placeholder="フリーワード">
+                        </div>
+                        <div class="searchbox-btn">
+                            <button class = "btn-search btn" type="button" onclick="searchAPI()">検索</button>
+                            <button class = "btn-search btn-unfilled btn" type="button" onclick="clearAPI()">クリア</button>
+                        </div>
+                    </div>   
+                </div>
+                <p class = "count-result">検索結果：<span id = "count">0</span>件</p>
+                <div class="tablebox">
+                    <table class="table" th:if="${items.size()}">
+                        <thead>
+                            <tr id="TableTittle">
+                                <th class="edit">編集</th>
+                                <th class="date">日付</th>
+                                <th class="category">カテゴリー</th>
+                                <th class="name">内容</th>
+                                <th class="price">値段</th>
+                                <th class="memo">メモ</th>
+                            </tr>
+                        </thead>
+                        <tbody id='ExpensesTable'>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            
+            <script>
+                $(document).ready(function($) { 
+                    $("#cognito-signout").submit(function(event) {
+                        lockForm($("#cognito-signout"));
+                        event.preventDefault();
+                        signOut(function(err, result) {
+                            unlockForm($("#cognito-signup"));
+                            $(location).attr('href', 'login.html'); 
+                        });
+                    });
+                });
+            </script>
+         </div>
+    </div>
+</body>
+</html>

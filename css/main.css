@@ -1,0 +1,438 @@
+@import url('https://fonts.googleapis.com/css2?family=Monoton&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+:root{
+    --main:  rgb(56 110 211);
+    --base:rgb(255 247 248);
+    --base-second:rgb(252, 229, 232);
+    --base-third:rgb(241, 234, 234);
+    --err:rgb(255 78 101);
+    --second:rgb(255, 177, 207);
+}
+
+body {
+    -webkit-text-size-adjust: 100%;
+    width: 100%;
+    background-color: var(--base);
+    font-size: 16px;
+}
+
+#container {
+    width: 100%;
+    max-width: 1035px;
+    margin: 0 auto;
+    height: auto;
+    text-align: center;
+}
+
+#header{
+    margin: 20px auto;
+    color: var(--main);
+}
+
+#header-title{
+    text-align: center;
+    font-family: 'Monoton', cursive;
+    font-size: 2.5em;
+    display: inline-block;
+}
+
+#header-id{
+    font-size: 0.8em;
+    display: inline-block;
+    text-align: right;
+    margin-left: 10px;
+}
+
+#body{
+    display: flex;
+    width: 100%;
+    max-width: 1035px;
+}
+@media screen and (max-width: 1035px) {
+    #body{
+        flex-direction: column;
+    }
+}
+
+.sidearea{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    max-width: 300px;
+    margin: 0 10px;
+}
+
+.side_bottom{
+    position: absolute;
+    bottom: 0;
+    right:0;
+}
+
+.btn-logout{
+    width: 180px;
+    height: 30px;
+}
+
+.register{
+    width: 180px;
+    height: 50px;
+    font-size: 1.2em;
+}
+
+#pricearea{
+	justify-content: space-between;
+    margin: 30px auto 0;
+    color: var(--main);
+}
+
+.pricearea-m{
+    background-color: var(--base-second);
+}
+.pricearea-t{
+    margin-top: 1em;
+    background-color: var(--base-third);
+}
+
+.price-title{
+    padding-bottom: 8px;
+    font-weight: bold;
+}
+
+.totalprice{
+    padding: 10px 0 10px;
+    font-size: 0.8em;
+    width: 180px;
+    margin-bottom: 8px;
+}
+
+.totalprice span{
+    padding-right:10px;
+    font-size: 1.4em;
+    padding-bottom: 8px;
+    vertical-align: baseline;
+}
+
+/* @media screen and (max-width: 1035px) {
+    .sidearea{
+        width: 100%;
+    }
+    .register{
+        width: 100%;
+    }
+    .pricearea-m{
+        float: left;
+    }
+    .side_bottom{
+        position: unset;
+    }
+} */
+
+.btn{
+    /* ブラウザ特有のスタイルを無効に */
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+    text-align: center; 
+    color: var(--base);
+    background-color: var(--main);
+    border: solid 1px var(--main);
+    border-radius: 3px;
+    transition: 0.3s; /* ホバーの変化を滑らかに */
+}
+
+.btn:hover{
+    color: var(--main);
+    background-color: var(--second);
+    border: none;
+}
+
+.btn-short{
+    width: 60px;
+    height: 30px;
+}
+
+.btn-unfilled{
+    color: var(--main);
+    background-color: var(--base);
+    border: solid 1px var(--main);
+}
+
+.btn-unfilled:hover{
+    background-color: rgb(255, 221, 221);
+    border: solid 1px var(--main);
+}
+
+.input-box{
+    margin: 10px auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.back-box{
+    text-align: left;
+    padding-left: 1.2em;
+}
+
+.btn-back{
+    color: var(--main);
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.btn-back::before{
+    content: '';
+    width: 8px;
+    height: 8px;
+    margin-top: -5px;
+    border-top: solid 2px var(--main);
+    border-right: solid 2px var(--main);
+    transform: rotate(225deg);
+    position: absolute;
+    top: 50%;
+    left: -1em;
+}
+
+.btn-search{
+    width: 80px;
+    height: 30px;
+    margin-left: 10px;
+}
+
+.btn-edit{
+    height: 1.4em;
+    width: 1.4em;
+}
+
+
+/*入力関係*/
+#exlain{ /*input,edit説明*/
+    padding: 20px 0;
+    font-size: 0.9em;
+    color: var(--main);
+}
+
+.form{
+    display: inline-block;
+    align-items: center;
+    justify-content: center;
+}
+.form label{
+    font-size: 0.9em;
+    color: var(--main);
+}
+
+.other{
+    align-items: center;
+    justify-content: center;
+}
+.value{
+    display: block;
+    margin: 10px auto;
+}
+
+.value label{
+    text-align: left;
+    display: block;
+}
+
+.inputCSS{
+    width: 400px;
+    max-width: 400px;
+    height: 32px;
+    padding: 10px 15px; /*ボックスを大きくする*/
+    font-size: 0.8em;
+    border-radius: 3px; /*ボックス角の丸み*/
+    border: none; /*枠線*/
+    box-sizing: border-box; /*横幅の解釈をpadding, borderまでとする*/
+}
+
+.input-textarea{
+    height: 70px;
+    max-height: 100px;
+}
+
+.errEmp_msg{
+    text-align: left;
+    padding-top: 5px;
+    font-size: 0.8em;
+    color: var(--err);
+}
+
+#searcharea{
+    margin-bottom: 10px;
+    color: var(--main);
+}
+
+.searchbox{
+    display: flex;
+    margin-bottom:10px;
+}
+
+.searchbox-btn{
+	display: block;
+    text-align: right;
+}
+
+.search-date{
+    width: 130px;
+    height: 30px;
+    font-size: 0.8em;
+}
+#endDate{
+    margin-right: 10px;
+}
+
+.search-text{
+    color: var(--main);
+    margin: 0 5px;
+    display: inline;
+}
+
+#free-search{
+    height: 30px;flex-grow: 1;
+    flex-grow: 1;
+}
+
+select{
+    background-color: #fff;
+    border:solid 1px var(--main);
+    border-radius: 3px;
+    padding-left: 10px;
+}
+
+#category{
+    display: block;
+    width: 400px;
+    height: 30px;
+}
+
+#search-category{
+    width: 120px;
+    height: 30px;
+    margin-right: 10px;
+    flex-grow: 1;
+}
+
+.count-result{
+    text-align: left;
+    color: var(--main);
+    font-size: 0.8em;
+    margin-bottom: 5px;
+}
+.tablebox{
+    display: block;
+    overflow-y:scroll;
+    min-height:40px;
+    max-height:620px;
+}
+
+.table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+}
+
+.table th, td {
+    vertical-align: middle;
+    border: 1px solid var(--main);
+    color: var(--main);
+    white-space: nowrap;
+    padding: 0.8em;
+}
+
+#TableTittle th {
+    position: sticky;
+    top: 0;
+    left: 0;
+    background: none;
+    border-top: none;
+    border-bottom: none;
+    font-size: 0.8em;
+}
+#TableTittle th:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-top: 1px solid var(--main);
+    border-bottom: 1px solid var(--main);
+    background: var(--base);
+    z-index: -1;
+}
+
+#ExpensesTable td {
+    font-size: 0.8em;
+    word-break: break-word;
+}
+  
+#ExpensesTable tr:nth-child(odd){/*奇数行*/
+    background-color: var(--base);
+}
+
+#ExpensesTable tr:nth-child(even){/*偶数行*/
+    background-color: var(--base-second);
+}
+
+.edit{
+    width:30px;
+    text-align: center;
+}
+
+.date{
+    width:100px;
+    text-align: left;
+}
+.category{
+    width:80px;
+    text-align: left;
+}
+.name{
+    width:120px;
+    text-align: left;
+}
+.price{
+    width:80px;
+    text-align: right;
+}
+
+.memo{
+    width:220px;
+    text-align: left;
+}
+
+.loginText{
+    text-align: left;
+    color: var(--main);
+    margin-top: 40px;
+    font-size: 0.8em;
+}
+
+.login-box{
+	display: block;
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.btn-login{
+    width: 120px;
+    height: 30px;
+}
+
+.loginText div{
+    margin: 12px auto;
+}
+
+.signupLink{
+    color: var(--main);
+    font-size: 0.8em;
+    margin-top: 20px;
+}

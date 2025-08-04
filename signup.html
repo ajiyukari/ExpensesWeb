@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css/main.css"/>
+    <script src="js/jquery-3.5.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <!-- SDK/Library for Amazon Cognito -->
+    <script type="text/javascript" src="./lib/cognito/jsbn.js"></script>
+    <script type="text/javascript" src="./lib/cognito/jsbn2.js"></script>
+    <script type="text/javascript" src="./lib/cognito/sjcl.js"></script>
+    <script type="text/javascript" src="./lib/cognito/moment.js"></script>
+    <script type="text/javascript" src="./lib/awssdk/aws-cognito-sdk.js"></script>
+    <script type="text/javascript" src="./lib/awssdk/amazon-cognito-identity.min.js"></script>
+    <script type="text/javascript" src="./lib/awssdk/aws-sdk.2.5.5.js"></script>
+    <script type="text/javascript" src="./lib/utils.js"></script>
+    <script type="text/javascript" src="./js/config.js"></script>
+    <script type="text/javascript" src="./js/cognito.js"></script>
+    <title>家計簿</title>
+</head>
+<body>
+    <script>
+        //「location.search」でURLのクエリ部分だけを抽出
+        let query = location.search;
+        //「split()」を使って「=」の部分でidと値を分割（"id","数字"）
+        let getOperation = query.split('=');
+        let operation = String(getOperation[1]);
+        console.log("operation:"+operation)
+
+        //初期表示（ボタン切り替え）
+        window.onload = ()=>{
+            if(operation == "activation"){
+                document.getElementById("cognito-signup").style.display = "none";
+                document.getElementById("exlain").innerHTML = "認証コードを入力してください";
+            }else{
+                document.getElementById("cognito-activation").style.display = "none";
+                document.getElementById("exlain").innerHTML = "登録する情報を入力してください";
+            }
+        }
+        window.document.onkeydown = (event) =>{
+            if (event.key === 'Enter') {
+                switch(operation){
+                    case "activation":
+                        activation();
+                        break;
+                    default:
+                        signup();
+                        break;
+            }    
+            }
+        }
+
+        const signup = ()=> {
+            let errorCheck = checkAPI();
+            if(errorCheck == "okay"){
+                let res = confirm("登録しますか");
+                if(res == true ) {
+                    lockForm($("#cognito-signup"));
+                    event.preventDefault(); 
+                    signUp(
+                        $('#signup-id').val(),
+                        $('#signup-password').val(),
+                        $('#signup-email').val(),
+                        function(err, result) {
+                            if (err) {
+                                unlockForm($("#cognito-signup"));
+                            } else {
+                                unlockForm($("#cognito-signup"));
+                                clearForm($('#cognito-signup'));
+                                $(location).attr('href', 'signup.html?operation=activation');
+                            }
+                        }
+                    );
+                }
+            }
+        }    
+
+        const activation = ()=> {
+            let errorCheck = checkAPI();
+            if(errorCheck == "okay"){
+                lockForm($("#cognito-activation"));
+                event.preventDefault();
+                activate(
+                    $('#activation-id').val(),
+                    $('#activation-code').val(),
+                    function(err, result) {
+                        if (err) {
+                            unlockForm($("#cognito-activation"));
+                        } else {
+                            unlockForm($("#cognito-activation"));
+                            alert("認証が確認できました。");
+                            $(location).attr('href', 'login.html');
+                        }
+                    }
+                );
+            }  
+        }
+        //入力チェック
+        const checkAPI = ()=>{
+            //クリアフラグ
+            let checkEmpFlag = 0;
+            let checkPwFlag = 0;
+            //エラー時の背景色
+            let errorColor = "#ffa9b4";
+            let nomalColor = "#FFF";
+            //空チェック
+            let checkEmp = document.getElementsByClassName('checkEmp');
+            //エラーメッセージ
+            let errorEmpMsg = document.getElementsByClassName('errEmp_msg');
+            let msg_emp = "入力してください";
+            for (var i = 0; i < checkEmp.length; i++){
+                if(checkEmp[i].value == ""){
+                    checkEmp[i].style.backgroundColor = errorColor;
+                    errorEmpMsg[i].innerHTML = msg_emp;
+                }else{
+                    checkEmpFlag++
+                    checkEmp[i].style.backgroundColor = nomalColor;
+                    errorEmpMsg[i].innerHTML = "";
+                }
+            }
+            //入力チェック
+            let checkPw = document.getElementsByClassName('checkPw');
+            //エラーメッセージ
+            let errorPwMsg = document.getElementsByClassName('errPw_msg');
+            const komoji = /[a-z]/, suji = /[0-9]/, hankaku = /[^\x01-\x7E]/;
+            for (var i = 0; i < checkPw.length; i++){
+                let val = checkPw[i].value;
+                if(val != ""){
+                    if((val).match(hankaku)){
+                        checkPw[i].style.backgroundColor = errorColor;
+                        errorPwMsg[i].innerHTML = "半角数字を入力してください";
+                    }else if(komoji.test(val) && suji.test(val) == true && val.length > 5){
+                        checkPwFlag++
+                        checkPw[i].style.backgroundColor = nomalColor;
+                        errorPwMsg[i].innerHTML = "";
+                    }else{
+                        checkPw[i].style.backgroundColor = errorColor;
+                        errorPwMsg[i].innerHTML = "６桁以上の小文字と半角数字を含む入力してください";
+                    }
+                }
+            }
+            //チェック完了の印
+            switch(operation){
+                case "activation":
+                    if(checkEmpFlag == 2){
+                        return "okay";
+                    }
+                    break;
+                default:
+                    if(checkEmpFlag == 3 && checkPwFlag == 2){
+                        return "okay";
+                    }
+                    break;
+            }       
+        }
+    </script>
+
+    <div id="container">
+        <div id="header">
+            <p id="header-title">expense tracker web app</p>
+        </div>
+        <div>
+            <p id="exlain"></p>
+        </div>
+        <div class="form">
+            <form id="cognito-signup">
+                <div class = "value">
+                    <label for="signup-id">ID:</label>
+                    <input type="text" id="signup-id" class="inputCSS checkEmp checkPw" placeholder="test00" maxlength="20">
+                    <div class="errEmp_msg errPw_msg"></div>
+                </div>
+                <div class = "value">
+                    <label for="signup-password">パスワード(６桁以上の小文字と半角数字)</label>
+                    <input type="password" id="signup-password" class="inputCSS checkEmp checkPw" placeholder="password" maxlength="20">
+                    <div class="errEmp_msg errPw_msg"></div>
+                </div>
+                <div class = "value">
+                    <label for="signup-email">メールアドレス (仮パスワード送付用)</label>
+                    <input type="text" id="signup-email" class="inputCSS checkEmp" placeholder="dummy@email.com">
+                    <div class="errEmp_msg"></div>
+                </div>
+                <div class = "login-box">
+                    <button type="button" id="signup-submit" class="btn-short btn" onclick="signup()">送信</button>
+                </div>
+                <div class="back-box">
+                    <a class="btn-back" onclick="location.href='./index.html'">戻る</a>
+                </div>
+                <div class="loginText">
+                    <p>■注意事項</p>
+                    <p>登録は行えますが、責任は保証致しかねます。</p>
+                    <p>登録されたアカウントは一定期間を過ぎた後</p>
+                    <p>管理側より削除いたします。</p>
+                </div>
+            </form>
+            <form id="cognito-activation" class="form">
+                <div class = "value">
+                    <label for="activation-id">ID</label>
+                    <input type="text" id="activation-id" class="inputCSS checkEmp" placeholder="test00" maxlength="20">
+                    <div class="errEmp_msg"></div>
+                </div>
+                <div class = "value">
+                    <label for="activation-code">確認コード</label>
+                    <input type="text" id="activation-code" class="inputCSS checkEmp" placeholder="000000">
+                    <div class="errEmp_msg"></div>
+                </div>
+                <div class = "login-box">
+                    <button type="button" id="signup-submit" class="btn-short btn" onclick="activation()">登録</button>
+                </div>
+                <div class="back-box">
+                    <a class="btn-back" onclick="location.href='./signup.html'">登録をやり直す</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
